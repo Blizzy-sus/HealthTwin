@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Health Twin AI - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Hanken+Grotesk:wght@600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@100..900&amp;family=Manrope:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(246, 225, 205, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(77, 69, 62, 0.3);
+        }
+        .twin-glow {
+            filter: drop-shadow(0 0 20px rgba(215, 195, 176, 0.2));
+        }
+        @keyframes pulse-gentle {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+        .pulse-active {
+            animation: pulse-gentle 3s ease-in-out infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#39342f",
+                        "surface-dim": "#17130f",
+                        "secondary-fixed-dim": "#ddc1ac",
+                        "on-tertiary": "#33302a",
+                        "on-secondary": "#3e2d1e",
+                        "inverse-surface": "#ebe1da",
+                        "on-secondary-fixed": "#27180b",
+                        "on-primary-fixed-variant": "#524436",
+                        "on-tertiary-fixed-variant": "#494640",
+                        "tertiary-fixed": "#e8e2d9",
+                        "on-tertiary-container": "#57534d",
+                        "secondary": "#ddc1ac",
+                        "surface-container-high": "#2e2925",
+                        "on-primary-fixed": "#241a0e",
+                        "primary-fixed-dim": "#d7c3b0",
+                        "error-container": "#93000a",
+                        "surface": "#17130f",
+                        "surface-bright": "#3e3834",
+                        "primary": "#f6e1cd",
+                        "on-tertiary-fixed": "#1d1b16",
+                        "on-secondary-container": "#cfb39e",
+                        "on-surface": "#ebe1da",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#eae4db",
+                        "background": "#17130f",
+                        "surface-variant": "#39342f",
+                        "surface-container": "#231f1b",
+                        "surface-tint": "#d7c3b0",
+                        "error": "#ffb4ab",
+                        "secondary-container": "#594535",
+                        "on-primary": "#3a2e21",
+                        "on-background": "#ebe1da",
+                        "on-primary-container": "#605142",
+                        "surface-container-low": "#1f1b17",
+                        "tertiary-container": "#cdc8bf",
+                        "inverse-on-surface": "#352f2b",
+                        "outline": "#998f86",
+                        "on-surface-variant": "#d0c4bb",
+                        "primary-fixed": "#f4dfcb",
+                        "inverse-primary": "#6b5c4c",
+                        "surface-container-lowest": "#110d0a",
+                        "primary-container": "#d9c5b2",
+                        "tertiary-fixed-dim": "#cbc6bd",
+                        "on-error": "#690005",
+                        "secondary-fixed": "#fbddc7",
+                        "outline-variant": "#4d453e",
+                        "on-secondary-fixed-variant": "#564333"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "xs": "8px",
+                        "container-margin": "20px",
+                        "xl": "48px",
+                        "lg": "32px",
+                        "gutter": "16px",
+                        "md": "20px",
+                        "sm": "12px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "data-metric": ["Manrope"],
+                        "label-caps": ["Hanken Grotesk"],
+                        "headline-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "data-metric": ["22px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-on-primary antialiased min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-background flex justify-between items-center w-full px-container-margin py-sm">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant/30">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a young woman with a calm and confident expression, set against a warm, neutrally toned architectural background. The lighting is soft and flattering, emphasizing a healthy complexion, perfectly aligning with a premium health and wellness AI application's aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAI9IiIRXEptdRL0zw2MEkdy1hoUVYNXmLMaQnl_aBI9rBoIXpq8Xd4HRT1rajJfp6ZNO6kgAL_LajqEsC1IzDrBGMVX1k2maKCvrNN2rMbwpApk8F-UQqD5GVobcmHP349j3zMP0_nA1qVPLSsvSeaTj93nBOnvoFmzUha-nijUIYZZfWvRpzYzee3-OcdItg5sO8S8ysGMhU1CDkkSoNw4qp9cfd96eTAUF3JMNGUK5KfUP63HNOasjBaSef7Ja9MlpQYVdpB10"/>
+</div>
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">Health Twin AI</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-high hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+</header>
+<main class="mt-20 px-container-margin space-y-lg">
+<!-- Header Text -->
+<section class="space-y-xs">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Twin Status</h2>
+<div class="flex items-center gap-xs">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<p class="font-label-caps text-label-caps text-secondary uppercase tracking-widest">Connected: demo-user-001</p>
+</div>
+</section>
+<!-- Central Twin Visualization -->
+<section class="relative w-full aspect-[4/5] rounded-[2rem] overflow-hidden group">
+<div class="absolute inset-0 z-0">
+
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+</div>
+<!-- Overlay Data Points -->
+<div class="absolute inset-0 z-10 p-md flex flex-col justify-between pointer-events-none">
+<div class="flex justify-between items-start">
+<div class="glass-panel p-sm rounded-xl pointer-events-auto">
+<p class="font-label-caps text-label-caps text-secondary mb-xs">VITALITY</p>
+<p class="font-data-metric text-data-metric text-primary">98%</p>
+</div>
+<div class="glass-panel p-sm rounded-xl pointer-events-auto">
+<p class="font-label-caps text-label-caps text-secondary mb-xs">BIO-SYNC</p>
+<p class="font-data-metric text-data-metric text-primary">Active</p>
+</div>
+</div>
+<!-- Featured Appointment CTA -->
+<div class="glass-panel p-md rounded-[1.5rem] pointer-events-auto translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+<div class="flex justify-between items-center mb-sm">
+<div class="space-y-base">
+<h3 class="font-headline-md text-headline-md text-on-surface leading-tight">Sign Up For An<br/>Appointment With A Doctor</h3>
+<p class="font-label-caps text-label-caps text-secondary"><span class="text-primary">2,456</span> Doctors Available</p>
+</div>
+<button class="bg-primary text-on-primary px-lg py-sm rounded-full font-label-caps text-label-caps hover:brightness-110 active:scale-95 transition-all">
+                            SEE ALL
+                        </button>
+</div>
+<div class="flex -space-x-2">
+<img alt="Doctor 1" class="w-8 h-8 rounded-full border-2 border-surface" data-alt="A professional medical doctor with a warm, empathetic expression, wearing a clean white lab coat in a modern, softly lit clinical setting. The image emphasizes trust and high-end healthcare services, maintaining the dark and earthy color palette of the application's design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI41uzaiCKDTywp2GU2pQ7y6HSl4JTxvJ792iMKlevjqkSnx5hvU94w8ht6LTCzknR-eHHuS422Mb7pGY5HYdhINVsDkSPZjrZvuOY6p5dznWYOu2qy_FXaJHebHFrO13BLetFlyyc-f7cObH9LAqqfj3HldqTPDXwAeTrqLr8Gz3Rx4kuhrLMgQprg4B2u25Z5Yh2xY2YkSOUc5CfpAy14i8htY5_vtLikm_kjVJeqKkWtSsvsmYcS41DNue5HNq3CBv04wmHCeY"/>
+<img alt="Doctor 2" class="w-8 h-8 rounded-full border-2 border-surface" data-alt="A female physician with a stethoscope around her neck, smiling gently toward the camera. She is in a contemporary medical office with warm wooden accents and soft ambient lighting, conveying expertise and approachable professional care consistent with the brand's sophisticated aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOT0qsDelOO_U5CuNNwrpMXrakjbIYvC_yeHHBeRL23NItEubJn8OMJ3sW_wmwi9AoCk-unY-sKgwnnX-APqDd-CXTAM8qyr07BG4SwCENXwseUqzprG-GCnB08ryp-_61Qqmzh-vhi9cWar5gq99Bsi9-Qx6HRPk0hvIohsH2khjTrcVWJy1Wde9-h24qfjxw4XDQi48148QEunemJbC1rnRkbOwyhgn_fc0ZnuHKFv7RYsb6foPKirMJ2sXTT1lIMVcy5g9Rav0"/>
+<img alt="Doctor 3" class="w-8 h-8 rounded-full border-2 border-surface" data-alt="A focused male surgeon in sterile blue scrubs, looking thoughtfully off-camera in a high-tech hospital environment. The lighting is precise and clean, reflecting the biological precision and human warmth themes of the Health Twin AI brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtgM6jVs-rCB88Lt25VuLSp7rdPPU6BuxPRXWU-xdW8zamO_tjiXlzAt_UyHHV4GPIOLjQ9YI8s0eIlwz1HRayi6rTnwc3l19OolZGnfU09BZuKRqF9mFVnH3WfRMOXU4dsJ7x9GEbiM6JKdaKueww9TLFbRvz2WGtk7buXaT1f4daz2rlAMCfvD4KJHw0hAbFWvsXP8yZfxQxTfDjGQDZw7oTOyCmI6l--L2QyYoWLsIgzIxK0NtmLK9LYunpw9kOOtyaANg6nFc"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Metrics -->
+<section class="grid grid-cols-2 gap-gutter">
+<!-- Heart Rate -->
+<div class="bg-surface-container rounded-[1.5rem] p-md border border-outline-variant/20 hover:border-primary/30 transition-colors">
+<div class="flex justify-between items-start mb-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-label-caps text-label-caps text-secondary">+2%</span>
+</div>
+<p class="font-data-metric text-data-metric text-on-surface mb-base">72 <span class="text-body-md opacity-60">BPM</span></p>
+<p class="font-label-caps text-label-caps text-secondary">RESTING HR</p>
+</div>
+<!-- Sleep -->
+<div class="bg-surface-container rounded-[1.5rem] p-md border border-outline-variant/20 hover:border-primary/30 transition-colors">
+<div class="flex justify-between items-start mb-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">bedtime</span>
+<span class="font-label-caps text-label-caps text-secondary">Optimal</span>
+</div>
+<p class="font-data-metric text-data-metric text-on-surface mb-base">7h 45m</p>
+<p class="font-label-caps text-label-caps text-secondary">DEEP SLEEP</p>
+</div>
+<!-- API Status Full Width -->
+<div class="col-span-2 glass-panel p-md rounded-[1.5rem] flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="p-xs bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary">cloud_sync</span>
+</div>
+<div>
+<p class="font-body-md text-on-surface font-semibold">API Sync Status</p>
+<p class="text-sm opacity-60">http://localhost:8000/v1/sync</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-primary">SYNCHRONIZED</p>
+<p class="text-[10px] opacity-40">LAST SYNC: 2m ago</p>
+</div>
+</div>
+</section>
+<!-- AI Insight Chip -->
+<div class="inline-flex items-center gap-xs bg-primary/10 border border-primary/20 px-sm py-xs rounded-full">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<p class="font-label-caps text-label-caps text-primary">AI Insight: Optimal recovery state detected.</p>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-lg left-0 right-0 z-50 flex justify-around items-center px-lg py-sm mx-auto max-w-md bg-primary/10 dark:bg-primary/10 rounded-full backdrop-blur-xl border border-outline-variant/20 shadow-xl shadow-primary/5">
+<a class="flex items-center justify-center text-primary dark:text-primary scale-110 active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+</a>
+<a class="flex items-center justify-center text-secondary dark:text-secondary opacity-60 hover:text-primary dark:hover:text-primary transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">person_pin</span>
+</a>
+<a class="flex items-center justify-center text-secondary dark:text-secondary opacity-60 hover:text-primary dark:hover:text-primary transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+</a>
+<a class="flex items-center justify-center text-secondary dark:text-secondary opacity-60 hover:text-primary dark:hover:text-primary transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">analytics</span>
+</a>
+<a class="flex items-center justify-center text-secondary dark:text-secondary opacity-60 hover:text-primary dark:hover:text-primary transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">simulation</span>
+</a>
+<a class="flex items-center justify-center text-secondary dark:text-secondary opacity-60 hover:text-primary dark:hover:text-primary transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">button_magic</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions and subtle atmospheric effects
+        document.addEventListener('DOMContentLoaded', () => {
+            const panels = document.querySelectorAll('.glass-panel');
+            
+            // Add a slight movement effect based on device orientation if available or mouse move
+            window.addEventListener('mousemove', (e) => {
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+                
+                panels.forEach(panel => {
+                    panel.style.transform = `translate(${xAxis}px, ${yAxis}px)`;
+                });
+            });
+
+            // Handle API sync simulation visual
+            setInterval(() => {
+                const apiDot = document.querySelector('.bg-primary.animate-pulse');
+                if(apiDot) {
+                    apiDot.classList.remove('bg-primary');
+                    apiDot.classList.add('bg-white');
+                    setTimeout(() => {
+                        apiDot.classList.remove('bg-white');
+                        apiDot.classList.add('bg-primary');
+                    }, 500);
+                }
+            }, 5000);
+        });
+    </script>
+</body></html>
