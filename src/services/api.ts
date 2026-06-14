@@ -2,7 +2,7 @@
 // Connects to the FastAPI backend at http://localhost:8000
 // All interfaces map 1-to-1 with the backend Pydantic schemas in handoff.md
 
-const BASE_URL = (import.meta as any).env?.VITE_API_BASE ?? 'http://localhost:8000';
+const BASE_URL = (import.meta as any).env?.VITE_API_BASE ?? '/api';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, options);

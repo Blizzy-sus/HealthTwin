@@ -6,7 +6,7 @@ deterioration before symptoms become obvious, and shows how today's
 choices change tomorrow's health.
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
@@ -31,14 +31,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(twin.router)
-app.include_router(reports.router)
-app.include_router(symptoms.router)
-app.include_router(simulator.router)
-app.include_router(family.router)
+api_router = APIRouter(prefix="/api")
+api_router.include_router(twin.router)
+api_router.include_router(reports.router)
+api_router.include_router(symptoms.router)
+api_router.include_router(simulator.router)
+api_router.include_router(family.router)
 
+app.include_router(api_router)
 
-@app.get("/", tags=["health"])
+@app.get("/api/health", tags=["health"])
 def health_check():
     """Root health-check endpoint."""
+    return {"status": "healthy", "service": "Health Twin AI"}
+
+@app.get("/", tags=["health"])
+def root_health_check():
     return {"status": "healthy", "service": "Health Twin AI"}

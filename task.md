@@ -1,0 +1,10 @@
+- [x] Kill existing backend and frontend servers
+- [x] Move `frontend/*` and hidden files to the root directory
+- [x] Remove `frontend` directory
+- [x] Rename `healthtwin-backend` to `api`
+- [x] Rename `api/main.py` to `api/index.py`
+- [x] Move `api/requirements.txt` to the root directory
+- [x] Update `api/index.py` to add `/api` prefix to all routers
+- [x] Update `src/services/api.ts` to use `/api` instead of `http://localhost:8000`
+- [x] Update `vite.config.ts` to include a local proxy for `/api`
+- [ ] Commit and push the structural changes to GitHub
