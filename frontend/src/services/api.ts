@@ -1,8 +1,25 @@
-import axios from 'axios';
+// ─── Typed API Service ──────────────────────────────────────────────────────
+// Connects to the FastAPI backend at http://localhost:8000
+// All interfaces map 1-to-1 with the backend Pydantic schemas in handoff.md
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE || 'http://localhost:8000',
-});
+const BASE_URL = (import.meta as any).env?.VITE_API_BASE ?? 'http://localhost:8000';
+
+async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const res = await fetch(`${BASE_URL}${path}`, options);
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`${res.status} ${res.statusText}: ${text}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+// ─── Response types ──────────────────────────────────────────────────────────
+
+export interface UserResponse {
+  id: string;
+  name: string;
+  age: number;
+}
 
 export interface Baseline {
   metric_name: string;
@@ -27,6 +44,13 @@ export interface TwinStatus {
   deviation_summary: string;
 }
 
+export interface MetricLogRequest {
+  user_id: string;
+  metric_name: string;
+  value: number;
+  recorded_date: string;
+}
+
 export interface MetricResponse {
   id: string;
   user_id: string;
@@ -35,28 +59,16 @@ export interface MetricResponse {
   recorded_date: string;
 }
 
-export interface ReportTranslationValue {
+export interface ReportValue {
   name: string;
   value: string;
   plain_english: string;
-  status: string;
+  status: string; // "normal" | "above_range" | "below_range"
 }
 
 export interface ReportTranslation {
-  values: ReportTranslationValue[];
+  values: ReportValue[];
   summary: string;
-}
-
-export interface SymptomAnalysisPattern {
-  pattern: string;
-  resembles: string;
-  recommended_test: string;
-  urgency: string;
-}
-
-export interface SymptomAnalysisResponse {
-  analysis: SymptomAnalysisPattern[];
-  disclaimer: string;
 }
 
 export interface ForecastScenario {
@@ -76,7 +88,7 @@ export interface ForecastResponse {
 
 export interface FamilyMember {
   name: string;
-  status: string;
+  status: 'green' | 'yellow' | 'red';
   reason: string;
 }
 
@@ -85,41 +97,39 @@ export interface FamilyDashboard {
   members: FamilyMember[];
 }
 
-export const twinApi = {
-  getTwinStatus: async (userId: string) => {
-    const { data } = await api.get<TwinStatus>(`/twin/${userId}/status`);
-    return data;
-  },
-  logMetric: async (userId: string, metricName: string, value: number, recordedDate: string) => {
-    const { data } = await api.post<MetricResponse>(`/twin/metrics/log`, {
-      user_id: userId,
-      metric_name: metricName,
-      value: value,
-      recorded_date: recordedDate,
-    });
-    return data;
-  },
-  uploadReport: async (file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    const { data } = await api.post<ReportTranslation>(`/reports/upload`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-    return data;
-  },
-  analyzeSymptoms: async (symptoms: string) => {
-    const { data } = await api.post<SymptomAnalysisResponse>(`/symptoms/analyze`, { symptoms });
-    return data;
-  },
-  getForecast: async (userId: string, lifestyleChanges: Record<string, any>) => {
-    const { data } = await api.post<ForecastResponse>(`/simulator/forecast`, {
-      user_id: userId,
-      lifestyle_changes: lifestyleChanges,
-    });
-    return data;
-  },
-  getFamilyDashboard: async (guardianId: string) => {
-    const { data } = await api.get<FamilyDashboard>(`/family/${guardianId}/dashboard`);
-    return data;
-  },
+// ─── API calls ───────────────────────────────────────────────────────────────
+
+// Dashboard → GET /twin/demo-user-001/status
+// Twin Status → GET /twin/demo-user-001/status
+export const getTwinStatus = (userId = 'demo-user-001'): Promise<TwinStatus> =>
+  request<TwinStatus>(`/twin/${userId}/status`);
+
+// Log Metrics → POST /twin/metrics/log
+export const logMetric = (body: MetricLogRequest): Promise<MetricResponse> =>
+  request<MetricResponse>('/twin/metrics/log', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+// Reports → POST /reports/upload  (multipart)
+export const uploadReport = (file: File): Promise<ReportTranslation> => {
+  const form = new FormData();
+  form.append('file', file);
+  return request<ReportTranslation>('/reports/upload', { method: 'POST', body: form });
 };
+
+// Simulator → POST /simulator/forecast
+export const getForecast = (
+  userId = 'demo-user-001',
+  lifestyleChanges: Record<string, number> = { walk_minutes: 30, weight_loss_kg: 5 }
+): Promise<ForecastResponse> =>
+  request<ForecastResponse>('/simulator/forecast', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId, lifestyle_changes: lifestyleChanges }),
+  });
+
+// Family → GET /family/demo-user-001/dashboard
+export const getFamilyDashboard = (guardianId = 'demo-user-001'): Promise<FamilyDashboard> =>
+  request<FamilyDashboard>(`/family/${guardianId}/dashboard`);

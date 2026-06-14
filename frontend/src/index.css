@@ -1,28 +1,3 @@
-@import "tailwindcss";
-
-@theme {
-  --color-primary: #D9C5B2;
-  --color-secondary: #967E6B;
-  --color-surface: #3D3630;
-  --color-surface-container-low: #1f1b17;
-  --color-surface-container-high: #2e2925;
-  --color-outline-variant: #4D453E;
-  --color-on-surface-variant: #D0C4BB;
-  --color-on-surface: #ebe1da;
-  --color-tertiary-fixed: #e8e2d9;
-  --color-on-tertiary: #33302a;
-  
-  --color-primary-container: #d9c5b2;
-  --color-on-primary-container: #605142;
-
-  --font-headline-md: Manrope, sans-serif;
-  --font-label-caps: 'Hanken Grotesk', sans-serif;
-  --font-body-md: Manrope, sans-serif;
-}
-
-@layer base {
-  body {
-    background-color: #17130f;
-    color: #ebe1da;
-  }
-}
+/* Reset Vite defaults */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #17130f; color: #ebe1da; font-family: 'Manrope', sans-serif; }
